@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     task_list = []
 
-    gpt_agent = GPTAgent(OPENAI_API_KEY, FAST_MODEL, goals)
+    gpt_agent = GPTAgent(OPENAI_API_KEY, SMART_MODEL, goals)
 
     while True:
         response = gpt_agent.generate_response()
