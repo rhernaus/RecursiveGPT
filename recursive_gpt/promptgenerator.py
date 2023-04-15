@@ -9,7 +9,8 @@ class PromptGenerator:
 
     def __init__(self):
         """
-        Initialize the PromptGenerator object with empty lists of constraints, commands, resources, and performance evaluations.
+        Initialize the PromptGenerator object with empty lists of constraints,
+        commands, resources, and performance evaluations.
         """
         self.constraints = []
         self.commands = []
@@ -41,12 +42,14 @@ class PromptGenerator:
 
     def add_command(self, command_label, command_name, args=None):
         """
-        Add a command to the commands list with a label, name, and optional arguments.
+        Add a command to the commands list with a label, name,
+        and optional arguments.
 
         Args:
             command_label (str): The label of the command.
             command_name (str): The name of the command.
-            args (dict, optional): A dictionary containing argument names and their values. Defaults to None.
+            args (dict, optional): A dictionary containing argument names and
+            their values. Defaults to None.
         """
         if args is None:
             args = {}
@@ -99,19 +102,22 @@ class PromptGenerator:
 
         Args:
             items (list): A list of items to be numbered.
-            item_type (str, optional): The type of items in the list. Defaults to 'list'.
+            item_type (str, optional): The type of items in the list.
+            Defaults to 'list'.
 
         Returns:
             str: The formatted numbered list.
         """
         if item_type == 'command':
-            return "\n".join(f"{i+1}. {self._generate_command_string(item)}" for i, item in enumerate(items))
+            return "\n".join(f"{i+1}. {self._generate_command_string(item)}"
+                             for i, item in enumerate(items))
         else:
             return "\n".join(f"{i+1}. {item}" for i, item in enumerate(items))
 
     def generate_prompt_string(self):
         """
-        Generate a prompt string based on the constraints, commands, resources, and performance evaluations.
+        Generate a prompt string based on the constraints, commands, resources,
+        and performance evaluations.
 
         Returns:
             str: The generated prompt string.
@@ -119,8 +125,12 @@ class PromptGenerator:
         formatted_response_format = json.dumps(self.response_format, indent=4)
         return (
             f"Constraints:\n{self._generate_numbered_list(self.constraints)}\n\n"
-            f"Commands:\n{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
+            "Commands:\n"
+            f"{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
             f"Resources:\n{self._generate_numbered_list(self.resources)}\n\n"
-            f"Performance Evaluation:\n{self._generate_numbered_list(self.performance_evaluation)}\n\n"
-            f"You should only respond in JSON format as described below \nResponse Format: \n{formatted_response_format} \nEnsure the response can be parsed by Python json.loads"
+            "Performance Evaluation:"
+            f"\n{self._generate_numbered_list(self.performance_evaluation)}\n\n"
+            "You should only respond in JSON format as described below \n"
+            f"Response Format: \n{formatted_response_format} \nEnsure the "
+            "response can be parsed by Python json.loads"
         )

@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 import openai
 from commands import execute_command
@@ -9,19 +8,21 @@ from prompt import get_prompt
 
 
 def test_api_key(api_key):
-        try:
-            openai.api_key = api_key
-            openai.Engine.list()
-            print("API key is valid.")
-        except openai.error.AuthenticationError:
-            print("API key is invalid. Please check your OpenAI API key.")
-            exit()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            exit()
+    try:
+        openai.api_key = api_key
+        openai.Engine.list()
+        print("API key is valid.")
+    except openai.error.AuthenticationError:
+        print("API key is invalid. Please check your OpenAI API key.")
+        exit()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        exit()
+
 
 class GPTAgent:
-    def __init__(self, api_key, model, goals, temperature=0.5, max_tokens=2000, n=1, stop=None):
+    def __init__(self, api_key, model, goals, temperature=0.5, max_tokens=2000,
+                 n=1, stop=None):
         openai.api_key = api_key
         self.model = model
         self.goals = goals
@@ -34,7 +35,10 @@ class GPTAgent:
 
     def generate_response(self):
         prompt = get_prompt()
-        prompt = f"{prompt} Your conversation history is: {self.conversation_history}"
+        prompt = (
+            f"{prompt} Your conversation history is: "
+            f"{self.conversation_history}"
+        )
         prompt = f"{prompt} Your memory is: {self.memory}"
         prompt = f"{prompt} Your goals are: {self.goals}"
 
@@ -72,7 +76,9 @@ if __name__ == "__main__":
     # Load default environment variables (.env)
     load_dotenv()
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-    assert OPENAI_API_KEY, "OPENAI_API_KEY environment variable is missing from .env"
+    assert OPENAI_API_KEY, (
+        "OPENAI_API_KEY environment variable is missing from .env"
+    )
 
     FAST_MODEL = os.getenv("FAST_MODEL", "gpt-3.5-turbo")
     SMART_MODEL = os.getenv("SMART_MODEL", "gpt-4")
@@ -99,7 +105,7 @@ if __name__ == "__main__":
 
         # Execute command
         if response["command"] is not None:
-            result = execute_command(response["command"]["name"], response["command"]["args"])
+            result = execute_command(response["command"]["name"],
+                                     response["command"]["args"])
             print(f"Command result: {result}")
             gpt_agent.conversation_history.append(result)
-

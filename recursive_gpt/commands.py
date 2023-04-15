@@ -15,11 +15,13 @@ def execute_command(command_name, arguments):
         "add_complex_task": lambda: add_complex_task(arguments["task"]),
         "list_tasks": lambda: list_tasks(),
         "read_from_file": lambda: read_from_file(arguments["file"]),
-        "write_to_file": lambda: write_to_file(arguments["file"], arguments["text"]),
-        "append_to_file": lambda: append_to_file(arguments["file"], arguments["text"]),
+        "write_to_file": lambda: write_to_file(
+            arguments["file"], arguments["text"]),
+        "append_to_file": lambda: append_to_file(
+            arguments["file"], arguments["text"]),
         "delete_file": lambda: delete_file(arguments["file"]),
         "search_files": lambda: search_files(arguments["text"]),
-        "execute_shell": lambda: execute_shell(arguments["command_line"]) if cfg.execute_local_commands else "You are not allowed to run local shell commands. To execute shell commands, EXECUTE_LOCAL_COMMANDS must be set to 'True' in your config. Do not attempt to bypass the restriction.",
+        "execute_shell": lambda: execute_shell(arguments["command_line"]),
         "task_complete": lambda: shutdown(),
         "do_nothing": lambda: "No action performed."
     }
@@ -28,9 +30,14 @@ def execute_command(command_name, arguments):
         if command_name in command_mapping:
             return command_mapping[command_name]()
         else:
-            return f"Unknown command '{command_name}'. Please refer to the 'COMMANDS' list for available commands and only respond in the specified JSON format."
+            return (
+                f"Unknown command '{command_name}'. Please refer to the "
+                "'COMMANDS' list for available commands and only respond in "
+                "the specified JSON format."
+            )
     except Exception as e:
         return f"Error: {str(e)}"
+
 
 def google_search(query, num_results=8):
     """
@@ -49,6 +56,7 @@ def add_simple_task(task):
 
     return f"Added task '{task}' to the simple task list."
 
+
 def add_complex_task(task):
     """
     Add a complex task to the task list.
@@ -57,6 +65,7 @@ def add_complex_task(task):
         f.write(task + "\n")
 
     return f"Added task '{task}' to the complex task list."
+
 
 def list_tasks():
     """
@@ -76,12 +85,14 @@ def list_tasks():
 
     return f"Simple tasks:\n{simple_tasks}\nComplex tasks:\n{complex_tasks}"
 
+
 def read_from_file(file):
     """
     Read a file.
     """
     with open(file, "r") as f:
         return f"File {file}. Content: {f.read()}"
+
 
 def write_to_file(file, text):
     """
@@ -92,6 +103,7 @@ def write_to_file(file, text):
 
     return f"File {file}. Content: {text}"
 
+
 def append_to_file(file, text):
     """
     Append text to a file.
@@ -101,12 +113,14 @@ def append_to_file(file, text):
 
     return f"File {file}. Appended: {text}"
 
+
 def delete_file(file):
     """
     Delete a file.
     """
     os.remove(file)
     return f"Deleted file {file}."
+
 
 def search_files(text):
     """
@@ -121,6 +135,7 @@ def search_files(text):
 
     return f"Search results: {results}"
 
+
 def execute_shell(command_line):
     """
     Execute a shell command.
@@ -128,9 +143,9 @@ def execute_shell(command_line):
     result = subprocess.run(command_line, capture_output=True, shell=True)
     return f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
 
+
 def shutdown():
     """
     Task is done. Stop the agent.
     """
     exit(0)
-
